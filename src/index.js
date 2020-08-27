@@ -65,7 +65,7 @@ class TodoList extends React.Component {
   };
 
   componentDidMount() {
-    fetch('https://jsonplaceholder.typicode.com/todos/')
+    fetch('my-json-server.typicode.com/mcactus/react-todo/todos/1')
     .then(response => response.json())
     .then(todos => this.setState({todo: todos}));
   }
