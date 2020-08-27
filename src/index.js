@@ -9,31 +9,31 @@ import "./index.css";
 class TodoList extends React.Component {
   state = {
     valueInput: "",
-    todo: []
+    todo: [],
   };
 
   // все методы которые есть у дочерних компонентов я вынес наверх,
   // так как сверху имею полный контроль над происходящим (стейтом, переменными и тд)
 
-  toggleDone = id => () => {
+  toggleDone = (id) => () => {
     // достаточно пройтись map'ом и обновить данные
     //
     const todo = this.state.todo.map((item, index) => {
       if (index === id) {
         return {
           ...item,
-          completed: !item.completed
+          completed: !item.completed,
         };
       }
       return item;
     });
 
     this.setState({
-      todo
+      todo,
     });
   };
 
-  deleteTodo = id => () => {
+  deleteTodo = (id) => () => {
     // опять же, одной строкой убираем нужное. без слайсов.
     //
     const todo = this.state.todo.filter((_, index) => index !== id);
@@ -47,16 +47,16 @@ class TodoList extends React.Component {
 
     const newItem = {
       title: valueInput,
-      completed: false
+      completed: false,
     };
 
     this.setState({
       todo: [...todo, newItem],
-      valueInput: ""
+      valueInput: "",
     });
   };
 
-  handleChange = event => {
+  handleChange = (event) => {
     // добовляем атрибут "name" тэгу input
     // тем самым делаем код маштабируемым.
     const { name, value } = event.target;
@@ -65,9 +65,10 @@ class TodoList extends React.Component {
   };
 
   componentDidMount() {
-    fetch('my-json-server.typicode.com/mcactus/react-todo/todos/1')
-    .then(response => response.json())
-    .then(todos => this.setState({todo: todos}));
+    fetch("https://my-json-server.typicode.com/mcactus/react-todo/todos/")
+      .then((response) => response.text())
+      .then((todos) => console.log(todos))
+      // .then((todos) => this.setState({ todo: todos }));
   }
 
   render() {
