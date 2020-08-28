@@ -18,8 +18,8 @@ class TodoList extends React.Component {
   toggleDone = (id) => () => {
     // достаточно пройтись map'ом и обновить данные
     //
-    const todo = this.state.todo.map((item, index) => {
-      if (index === id) {
+    const todo = this.state.todo.map((item) => {
+      if (item.id === id) {
         return {
           ...item,
           completed: !item.completed,
@@ -36,7 +36,7 @@ class TodoList extends React.Component {
   deleteTodo = (id) => () => {
     // опять же, одной строкой убираем нужное. без слайсов.
     //
-    const todo = this.state.todo.filter((_, index) => index !== id);
+    const todo = this.state.todo.filter((elem) => elem.id !== id);
 
     this.setState({ todo: todo });
   };
@@ -46,6 +46,7 @@ class TodoList extends React.Component {
     const { valueInput, todo } = this.state;
 
     const newItem = {
+      id: todo.length + 1,
       title: valueInput,
       completed: false,
     };
@@ -57,7 +58,7 @@ class TodoList extends React.Component {
   };
 
   handleChange = (event) => {
-    // добовляем атрибут "name" тэгу input
+    // добавляем атрибут "name" тэгу input
     // тем самым делаем код маштабируемым.
     const { name, value } = event.target;
 
@@ -65,10 +66,10 @@ class TodoList extends React.Component {
   };
 
   componentDidMount() {
+    // запрашиваем данные с fake-сервера
     fetch("https://my-json-server.typicode.com/mcactus/react-todo/todos/")
-      .then((response) => response.text())
-      .then((todos) => console.log(todos))
-      // .then((todos) => this.setState({ todo: todos }));
+      .then((response) => response.json())
+      .then((todos) => this.setState({ todo: todos }));
   }
 
   render() {
