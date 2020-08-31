@@ -1,7 +1,8 @@
 class RequestProvider {
   requestUrl = 'https://my-json-server.typicode.com/mcactus/react-todo/todos/'
+  // static requestUrl = 'https://jsonplaceholder.typicode.com/todos/'
 
-  static async runRequest(method = 'GET', data = '', urlPart = '') {
+  async runRequest(method = 'GET', data = '', urlPart = '') {
     const safeUrlPart = String(urlPart);
     let requestParams = {
       method: method,
@@ -11,31 +12,30 @@ class RequestProvider {
     }
 
     if(data) {
-      requestParams.body = data;
+      requestParams.body = JSON.stringify(data);
     }
 
     const response = await fetch(this.requestUrl + safeUrlPart, requestParams)
-    .then(request => {console.log(request.text())});
-    // return response.json();
+    return response.json();
   }
 
-  static async getList() {
+  async getList() {
     return await this.runRequest();
   }
 
-  static async createResorce(data) {
+  async createResource(data) {
     return await this.runRequest('POST', data);
   }
 
-  static async updateResource(data) {
+  async updateResource(data) {
     if(!data.id) throw new Error('Data object should contain an ID of updating resource');
 
     return await this.runRequest('PUT', data, data.id);
   }
 
-  static async deleteResorce(id) {
+  async deleteResource(id) {
     return await this.runRequest('DELETE', {}, id)
   }
 }
 
-export default RequestProvider;
+export default new RequestProvider();

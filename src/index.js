@@ -3,7 +3,7 @@ import ReactDOM from "react-dom";
 
 // Обычно компоненты выносятся в разные файлы. Но не всегда
 import TodoElement from "./TodoElement";
-import RequestProvider from './RequestProvider';
+import RequestProvider from './API/RequestProvider';
 // import { initialArray } from "./constants";
 import "./index.css";
 
@@ -21,10 +21,13 @@ class TodoList extends React.Component {
     //
     const todo = this.state.todo.map((item) => {
       if (item.id === id) {
-        return {
+        const newItem = {
           ...item,
           completed: !item.completed,
-        };
+        }
+        
+        RequestProvider.updateResource(newItem);
+        return newItem;
       }
       return item;
     });
@@ -38,19 +41,19 @@ class TodoList extends React.Component {
     // опять же, одной строкой убираем нужное. без слайсов.
     //
     const todo = this.state.todo.filter((elem) => elem.id !== id);
+    RequestProvider.deleteResource(id)
 
     this.setState({ todo: todo });
   };
 
-  addNewTodo = () => {
+  addNewTodo = async () => {
     // здесь в целом было всё ок
     const { valueInput, todo } = this.state;
 
-    const newItem = {
-      id: todo.length + 1,
+    const newItem = await RequestProvider.createResource({
       title: valueInput,
       completed: false,
-    };
+    });
 
     this.setState({
       todo: [...todo, newItem],
