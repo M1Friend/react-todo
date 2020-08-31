@@ -3,6 +3,7 @@ import ReactDOM from "react-dom";
 
 // Обычно компоненты выносятся в разные файлы. Но не всегда
 import TodoElement from "./TodoElement";
+import RequestProvider from './RequestProvider';
 // import { initialArray } from "./constants";
 import "./index.css";
 
@@ -67,8 +68,7 @@ class TodoList extends React.Component {
 
   componentDidMount() {
     // запрашиваем данные с fake-сервера
-    fetch("https://my-json-server.typicode.com/mcactus/react-todo/todos/")
-      .then((response) => response.json())
+    RequestProvider.getList()
       .then((todos) => this.setState({ todo: todos }));
   }
 
