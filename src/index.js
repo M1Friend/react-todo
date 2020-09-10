@@ -17,6 +17,10 @@ class TodoList extends React.Component {
   state = {
     valueInput: "",
     todo: [],
+    filters: {
+      title: '',
+      completed: false
+    }
   }
 
   // все методы которые есть у дочерних компонентов я вынес наверх,
@@ -96,10 +100,45 @@ class TodoList extends React.Component {
     });
   }
 
+  changeFilter = (event) => {
+    const { filters } = this.state;
+    const { type, value } = event.target;
+
+    if(type === 'checkbox') {
+      filters.completed = !filters.completed;
+    } else {
+      filters.title = value;
+    }
+
+    this.setState({
+      filters: filters
+    });
+  }
+
   render() {
-    const { todo, valueInput } = this.state;
+    const { todo, valueInput, filters } = this.state;
     return (
       <div className="todo">
+        <form
+          className="filter-todo"
+          onSubmit={e => e.preventDefault()}
+        >
+          <input
+            type="text"
+            name="title"
+            value={filters.title}
+            onChange={this.changeFilter}
+          />
+          <label>
+            <input
+              type="checkbox"
+              name="completed"
+              checked={filters.completed}
+              onChange={this.changeFilter}
+            />
+            <span>Выполненные</span>
+          </label>
+        </form>
         <form className="add-todo" onSubmit={this.addNewTodo}>
           <input
             type="text"
@@ -111,15 +150,24 @@ class TodoList extends React.Component {
           <button onClick={this.addNewTodo}>Создать</button>
         </form>
         <ul>
-          {todo.map((elem) => 
-            <TodoElement
-              item={elem}
-              onToggleDone={this.toggleDone(elem.id)}
-              onDelete={this.deleteTodo(elem.id)}
-              onSave={this.saveTodoTitle(elem.id)}
-              key={elem.id}
-            />
-          )}
+          {todo.map((elem) => {
+            const {filters} = this.state;
+            const sampleString = new RegExp(filters.title);
+            if(sampleString.test(elem.title)) {
+              if(!filters.completed || elem.completed === filters.completed){
+                return (
+                  <TodoElement
+                    item={elem}
+                    onToggleDone={this.toggleDone(elem.id)}
+                    onDelete={this.deleteTodo(elem.id)}
+                    onSave={this.saveTodoTitle(elem.id)}
+                    hidden={elem.hidden}
+                    key={elem.id}
+                  />
+                )
+              }
+            }
+          })}
         </ul>
       </div>
     );

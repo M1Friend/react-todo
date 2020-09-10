@@ -28,11 +28,11 @@ class TodoElement extends React.Component {
   }
 
   render () {
-    const { item, onDelete ,onToggleDone } = this.props;
+    const { item, onDelete ,onToggleDone, hidden } = this.props;
     const { completed } = item;
     const { editActive, title } = this.state;
     return (
-      <li>
+      <li className={hidden ? 'hidden' : ''}>
         <label>
           <input checked={completed} type="checkbox" onChange={onToggleDone} />
         </label>
