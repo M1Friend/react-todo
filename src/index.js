@@ -19,7 +19,7 @@ class TodoList extends React.Component {
     todo: [],
     filters: {
       title: '',
-      completed: false
+      completed: 'all'
     }
   }
 
@@ -102,14 +102,9 @@ class TodoList extends React.Component {
 
   changeFilter = (event) => {
     const { filters } = this.state;
-    const { type, value } = event.target;
+    const { name, value } = event.target;
 
-    if(type === 'checkbox') {
-      filters.completed = !filters.completed;
-    } else {
-      filters.title = value;
-    }
-
+    filters[name] = value;
     this.setState({
       filters: filters
     });
@@ -131,12 +126,33 @@ class TodoList extends React.Component {
           />
           <label>
             <input
-              type="checkbox"
+              type="radio"
               name="completed"
-              checked={filters.completed}
+              value="all"
+              checked={filters.completed === 'all'}
+              onChange={this.changeFilter}
+            />
+            <span>Все</span>
+          </label>
+          <label>
+            <input
+              type="radio"
+              name="completed"
+              value="completed"
+              checked={filters.completed === 'completed'}
               onChange={this.changeFilter}
             />
             <span>Выполненные</span>
+          </label>
+          <label>
+            <input
+              type="radio"
+              name="completed"
+              value="incomplete"
+              checked={filters.completed === 'incomplete'}
+              onChange={this.changeFilter}
+            />
+            <span>Невыполненные</span>
           </label>
         </form>
         <form className="add-todo" onSubmit={this.addNewTodo}>
@@ -153,8 +169,18 @@ class TodoList extends React.Component {
           {todo.map((elem) => {
             const {filters} = this.state;
             const sampleString = new RegExp(filters.title);
+            let completeFilter = true;
             if(sampleString.test(elem.title)) {
-              if(!filters.completed || elem.completed === filters.completed){
+              switch (filters.completed) {
+                case 'completed':
+                  completeFilter = elem.completed;
+                  break;
+                case 'incomplete':
+                  completeFilter = !elem.completed;
+                  break;
+                default: break;
+              }
+              if(completeFilter){
                 return (
                   <TodoElement
                     item={elem}
