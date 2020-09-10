@@ -1,6 +1,5 @@
 class RequestProvider {
-  static requestUrl = 'https://my-json-server.typicode.com/mcactus/react-todo/todos/'
-  // static requestUrl = 'https://jsonplaceholder.typicode.com/todos/'
+  static requestUrl = 'https://my-json-server.typicode.com/mcactus/react-todo/todos/';
 
   static async runRequest(method = 'GET', data = '', urlPart = '') {
     const safeUrlPart = String(urlPart);

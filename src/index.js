@@ -43,11 +43,29 @@ class TodoList extends React.Component {
     });
   }
 
+  saveTodoTitle = (id) => ({ title }) => {
+    const todoList = this.state.todo;
+    const todo = todoList.find(elem => {
+      const result = elem.id === id;
+      if(result) {
+        elem.title = title;
+      }
+      return result;
+    });
+
+    RequestProvider.updateResource(todo);
+    this.setState(() => {
+      return {
+        todo: todoList
+      }
+    })
+  }
+
   deleteTodo = (id) => () => {
     // опять же, одной строкой убираем нужное. без слайсов.
     //
     const todo = this.state.todo.filter((elem) => elem.id !== id);
-    RequestProvider.deleteResource(id)
+    RequestProvider.deleteResource(id);
 
     this.setState({ todo });
   }
@@ -98,6 +116,7 @@ class TodoList extends React.Component {
               item={elem}
               onToggleDone={this.toggleDone(elem.id)}
               onDelete={this.deleteTodo(elem.id)}
+              onSave={this.saveTodoTitle(elem.id)}
               key={elem.id}
             />
           )}

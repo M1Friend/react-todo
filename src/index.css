@@ -1,3 +1,19 @@
 * {
     box-sizing: border-box;
 }
+
+.edit-input {
+    border: 1px solid transparent;
+}
+
+.edit-input.active {
+    border: 1px solid #000;
+}
+
+.edit-btn {
+    display: none;
+}
+
+.edit-btn.active {
+    display: inline-block;
+}
